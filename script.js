@@ -314,25 +314,16 @@ function viewedYearMonth() {
   return `${y}-${pad2(app.monthDate.getMonth() + 1)}`;
 }
 
-/** 할 일 생성 시각을 서울 기준 연·월 `YYYY-MM` */
-function createdYearMonthSeoul(ms) {
-  const f = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-  });
-  const parts = f.formatToParts(new Date(ms));
-  const o = {};
-  for (const p of parts) {
-    if (p.type !== "literal") o[p.type] = p.value;
-  }
-  return `${o.year}-${o.month}`;
+/** 일정이 표시되는 날짜 기준 연·월 `YYYY-MM` (달력 NEW는 ‘보고 있는 달’과 맞춤) */
+function occurrenceYearMonth(t) {
+  const iso = t.displayDateISO || t.storageDateISO;
+  return typeof iso === "string" && iso.length >= 7 ? iso.slice(0, 7) : "";
 }
 
 function shouldShowNewBadge(t) {
   if (!t.createdAt) return false;
   if (!app.newTodoIds.has(`${t.storageDateISO}::${t.id}`)) return false;
-  return createdYearMonthSeoul(t.createdAt) === viewedYearMonth();
+  return occurrenceYearMonth(t) === viewedYearMonth();
 }
 
 function clearNewBadgesForDate(dateISO) {
