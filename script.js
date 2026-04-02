@@ -1,9 +1,29 @@
 // Calendar Todos (vanilla JS)
-// - Data is saved to localStorage automatically
+// - Data is saved & synced with Firebase Realtime Database
 // - Todos are stored per date (YYYY-MM-DD)
 
-const STORAGE_KEY = "todoCalendarDataV1";
 const CATEGORIES = ["약속", "생일", "할일"];
+
+// Your Firebase config (provided by user)
+const firebaseConfig = {
+  apiKey: "AIzaSyD0bY4Q1BiLOSwuTsLbrVc2qCbOUp5B2yg",
+  authDomain: "todo1-57a56.firebaseapp.com",
+  databaseURL: "https://todo1-57a56-default-rtdb.firebaseio.com",
+  projectId: "todo1-57a56",
+  storageBucket: "todo1-57a56.firebasestorage.app",
+  messagingSenderId: "546760698752",
+  appId: "1:546760698752:web:874026b5fe78fb19e66f65",
+  measurementId: "G-4X2C74FDEQ",
+};
+
+// Firebase init (compat SDK for simplicity)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// NOTE:
+// This writes to a shared public path. If you want user accounts later,
+// we can add Firebase Auth and store per-user data.
+const TODOS_ROOT = "todosByDate";
 
 function pad2(n) {
   return String(n).padStart(2, "0");
@@ -29,36 +49,6 @@ function formatMonthLabel(date) {
   return date.toLocaleDateString("ko-KR", { year: "numeric", month: "long" });
 }
 
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { todosByDate: {} };
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return { todosByDate: {} };
-    if (!parsed.todosByDate || typeof parsed.todosByDate !== "object") return { todosByDate: {} };
-
-    // Migration: old todos might have `tags`; new version uses `category`
-    const todosByDate = {};
-    for (const [dateISO, list] of Object.entries(parsed.todosByDate)) {
-      if (!Array.isArray(list)) continue;
-      todosByDate[dateISO] = list.map((t) => {
-        const next = { ...t };
-        if (!next.category || !CATEGORIES.includes(next.category)) next.category = "할일";
-        delete next.tags;
-        return next;
-      });
-    }
-
-    return { todosByDate };
-  } catch {
-    return { todosByDate: {} };
-  }
-}
-
-function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ todosByDate: state.todosByDate }));
-}
-
 function makeId() {
   // Good enough for a beginner app
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -82,7 +72,7 @@ const els = {
 };
 
 const app = {
-  state: loadState(),
+  state: { todosByDate: {} }, // { [dateISO]: { [todoId]: todo } }
   selectedDateISO: null,
   activeCategory: null, // "약속" | "생일" | "할일" | null(전체)
   todayISO: toISODate(new Date()),
@@ -102,36 +92,43 @@ function ensureDateSelected() {
 }
 
 function getTodosForDate(dateISO) {
-  const list = app.state.todosByDate[dateISO];
-  return Array.isArray(list) ? list : [];
-}
-
-function setTodosForDate(dateISO, todos) {
-  app.state.todosByDate[dateISO] = todos;
-  saveState(app.state);
+  const obj = app.state.todosByDate[dateISO];
+  if (!obj || typeof obj !== "object") return [];
+  const todos = Object.entries(obj).map(([id, t]) => ({
+    id,
+    text: t?.text ?? "",
+    completed: !!t?.completed,
+    category: CATEGORIES.includes(t?.category) ? t.category : "할일",
+    createdAt: Number.isFinite(t?.createdAt) ? t.createdAt : 0,
+  }));
+  // newest first
+  todos.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  return todos;
 }
 
 function deleteTodo(dateISO, todoId) {
-  const todos = getTodosForDate(dateISO);
-  const next = todos.filter((t) => t.id !== todoId);
-  setTodosForDate(dateISO, next);
+  return db.ref(`${TODOS_ROOT}/${dateISO}/${todoId}`).remove();
 }
 
 function toggleTodoCompleted(dateISO, todoId) {
-  const todos = getTodosForDate(dateISO);
-  const next = todos.map((t) => (t.id === todoId ? { ...t, completed: !t.completed } : t));
-  setTodosForDate(dateISO, next);
+  const todoRef = db.ref(`${TODOS_ROOT}/${dateISO}/${todoId}`);
+  return todoRef.transaction((current) => {
+    if (!current) return current;
+    return { ...current, completed: !current.completed };
+  });
 }
 
 function addTodo(dateISO, text, category) {
-  const todos = getTodosForDate(dateISO);
   const todo = {
-    id: makeId(),
     text,
     completed: false,
     category,
+    createdAt: Date.now(),
   };
-  setTodosForDate(dateISO, [todo, ...todos]);
+
+  // Use Firebase push() to avoid id collisions
+  const listRef = db.ref(`${TODOS_ROOT}/${dateISO}`).push();
+  return listRef.set(todo);
 }
 
 function getMonthDaysGrid(year, monthIndex) {
@@ -307,7 +304,6 @@ function renderTodos() {
     check.checked = !!todo.completed;
     check.addEventListener("change", () => {
       toggleTodoCompleted(app.selectedDateISO, todo.id);
-      renderAll();
     });
 
     const main = document.createElement("div");
@@ -337,7 +333,6 @@ function renderTodos() {
     del.textContent = "삭제";
     del.addEventListener("click", () => {
       deleteTodo(app.selectedDateISO, todo.id);
-      renderAll();
     });
     actions.appendChild(del);
 
@@ -406,4 +401,12 @@ els.filterTodo.addEventListener("click", () => {
 // Init
 ensureDateSelected();
 renderAll();
+
+// Firebase live sync
+db.ref(TODOS_ROOT).on("value", (snap) => {
+  const val = snap.val();
+  app.state.todosByDate = val && typeof val === "object" ? val : {};
+  renderAll();
+});
+
 
