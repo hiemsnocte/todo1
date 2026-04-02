@@ -11,6 +11,7 @@
   --good: #10b981;
   --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
   --radius: 18px;
+  --day-cell-min-h: 67px;
 }
 
 * {
@@ -96,12 +97,149 @@ body {
   padding: 16px;
 }
 
+.calendarCard {
+  padding: 16px;
+}
+
+.todoCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.todoCard > .card__header {
+  padding: 16px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.75);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.92));
+}
+
+.todoCard .todoForm {
+  margin: 0;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.55);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.todoCard .todoList {
+  padding: 14px 16px 16px;
+  background: rgba(241, 245, 249, 0.45);
+}
+
 .card__header {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: center;
   margin-bottom: 12px;
+}
+
+.card__header--calendar {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.calHeader {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.calYear {
+  grid-column: 1;
+  justify-self: start;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-size: 15px;
+  color: rgba(31, 41, 55, 0.88);
+  appearance: none;
+  margin: 0;
+  padding: 4px 8px;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.calYear:hover {
+  border-color: rgba(148, 163, 184, 0.55);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.calHeaderCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  grid-column: 2;
+  justify-self: center;
+}
+
+.calHeader .todayPill {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.calNavBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(31, 41, 55, 0.72);
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.calNavBtn:hover {
+  background: rgba(248, 250, 252, 0.98);
+  border-color: rgba(148, 163, 184, 0.85);
+}
+
+.calNavBtn--ghost {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.calMonthBtn {
+  width: auto;
+  min-width: 72px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 16px;
+  letter-spacing: -0.03em;
+  border-radius: 10px;
+  font-weight: 800;
+  color: rgba(31, 41, 55, 0.88);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* 계절 배경·글자색은 마우스 오버 시에만 */
+.calMonthBtn.calMonthArt--spring:hover {
+  color: rgba(157, 23, 77, 0.95);
+  background: linear-gradient(180deg, #fff7fa, rgba(255, 209, 220, 0.75));
+  border-color: rgba(251, 207, 216, 0.95);
+}
+
+.calMonthBtn.calMonthArt--summer:hover {
+  color: rgba(14, 116, 144, 0.95);
+  background: linear-gradient(180deg, #f8fdff, rgba(186, 230, 253, 0.65));
+  border-color: rgba(165, 220, 252, 0.9);
+}
+
+.calMonthBtn.calMonthArt--autumn:hover {
+  color: rgba(154, 52, 18, 0.95);
+  background: linear-gradient(180deg, #fffbf5, rgba(254, 215, 170, 0.65));
+  border-color: rgba(253, 186, 116, 0.85);
+}
+
+.calMonthBtn.calMonthArt--winter:hover {
+  color: rgba(51, 65, 85, 0.95);
+  background: linear-gradient(180deg, #ffffff, rgba(224, 231, 255, 0.75));
+  border-color: rgba(199, 210, 254, 0.9);
 }
 
 .card__title {
@@ -116,6 +254,32 @@ body {
   margin-top: 2px;
 }
 
+#todoHint {
+  color: #111827;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+#todoHint .todoHint__count {
+  color: #dc2626;
+  font-weight: 900;
+}
+
+#todoHint .todoHint__count--zero {
+  color: #111827;
+  font-weight: 900;
+}
+
+.todoCard__titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todoPanel__head {
+  align-items: flex-start;
+}
+
 .pill {
   font-size: 12px;
   padding: 7px 10px;
@@ -126,10 +290,86 @@ body {
   user-select: none;
 }
 
+.todayPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: min(420px, 100%);
+  line-height: 1.25;
+}
+
+.todayPill__weather {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.todayPill__temp {
+  font-weight: 900;
+  color: #111827;
+  font-size: 12px;
+}
+
+.todayPill__sep {
+  opacity: 0.35;
+  font-weight: 900;
+}
+
+.todayPill__label {
+  font-weight: 800;
+}
+
+.todayPill__md {
+  font-weight: 800;
+  color: #111827;
+}
+
+.todayPill__time {
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
 .calendar {
+  display: block;
+}
+
+.monthBlock {
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(246, 247, 251, 0.55);
+  position: relative;
+}
+
+.monthBlock > * {
+  position: relative;
+  z-index: 1;
+}
+
+.monthBg--spring {
+  background: linear-gradient(135deg, rgba(255, 209, 220, 0.55), rgba(255, 228, 230, 0.55));
+}
+
+.monthBg--summer {
+  background: linear-gradient(135deg, rgba(186, 230, 253, 0.55), rgba(254, 249, 195, 0.55));
+}
+
+.monthBg--autumn {
+  background: linear-gradient(135deg, rgba(254, 215, 170, 0.55), rgba(253, 230, 138, 0.5));
+}
+
+.monthBg--winter {
+  background: linear-gradient(135deg, rgba(224, 231, 255, 0.65), rgba(226, 232, 240, 0.55));
+}
+
+.monthGrid {
+  padding: 10px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
+  position: relative;
 }
 
 .calHead {
@@ -138,6 +378,10 @@ body {
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
   margin-bottom: 2px;
+}
+
+.dayCellSpacer {
+  min-height: var(--day-cell-min-h);
 }
 
 .dow {
@@ -157,12 +401,15 @@ body {
   border: 1px solid rgba(229, 231, 235, 0.9);
   background: rgba(246, 247, 251, 0.65);
   border-radius: 14px;
-  padding: 10px 8px;
-  min-height: 56px;
+  padding: 8px 8px 10px;
+  min-height: var(--day-cell-min-h);
   cursor: pointer;
   text-align: left;
   transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .dayBtn:hover {
@@ -179,7 +426,15 @@ body {
 
 .dayNum {
   font-weight: 800;
-  font-size: 14px;
+  font-size: 11.2px;
+  align-self: flex-start;
+  margin: 2px 0 0 4px;
+}
+
+.dayIcon {
+  font-size: 12px;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .dayNum--weekend {
@@ -187,15 +442,23 @@ body {
 }
 
 .previewList {
-  margin-top: 8px;
+  margin-top: 6px;
+  margin-left: -8px;
+  margin-right: -8px;
+  width: calc(100% + 16px);
   display: grid;
-  gap: 6px;
+  gap: 3px;
+  flex: 1;
+  min-height: 0;
 }
 
+/* 날짜칸 가로 전체 너비 테이프 (둥근 알약 형태 아님) */
 .previewItem {
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(107, 114, 128, 0.18);
+  width: 100%;
+  min-height: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent;
   position: relative;
   overflow: hidden;
 }
@@ -203,34 +466,43 @@ body {
 .previewItem__fill {
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  opacity: 0.95;
+  border-radius: 0;
+  opacity: 0.98;
 }
 
 .previewItem__text {
   position: absolute;
-  left: 8px;
-  right: 8px;
+  left: 6px;
+  right: 6px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 10px;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.95);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1;
+  line-height: 1.2;
 }
 
-.previewItem--done .previewItem__fill {
-  opacity: 0.35;
+.previewItem--completed {
+  background: transparent;
+}
+
+.previewItem__text--completed {
+  color: #0f172a;
+  text-decoration: line-through;
+  text-decoration-color: rgba(15, 23, 42, 0.45);
+  font-weight: 800;
 }
 
 .previewMore {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--muted);
   font-weight: 800;
-  margin-top: 6px;
+  margin-top: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .dayBtn--today {
@@ -248,6 +520,7 @@ body {
   grid-template-columns: 1fr 1fr auto;
   gap: 10px;
   margin: 10px 0 14px;
+  align-items: end;
 }
 
 .field__label {
@@ -287,6 +560,12 @@ body {
   align-self: end;
 }
 
+.todoForm .btn {
+  padding: 9px 11px;
+  font-size: 0.81rem;
+  border-radius: 12px;
+}
+
 .btn:hover {
   transform: translateY(-1px);
   filter: brightness(1.02);
@@ -300,6 +579,12 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+.btn--block {
+  width: 100%;
+  display: block;
+  margin-top: 4px;
 }
 
 .btn--ghost {
@@ -444,6 +729,92 @@ body {
   color: #065f46;
 }
 
+.miniPicker {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.miniPicker[hidden] {
+  display: none;
+}
+
+.miniPicker__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(15, 23, 42, 0.45);
+  cursor: pointer;
+}
+
+.miniPicker__panel {
+  position: relative;
+  z-index: 1;
+  width: min(360px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(229, 231, 235, 0.95);
+}
+
+.miniPicker__title {
+  font-weight: 900;
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.yearPickerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.yearInput {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  font-weight: 800;
+  font-size: 16px;
+  text-align: center;
+}
+
+.miniPicker__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.miniPicker__monthOpt {
+  appearance: none;
+  border: 1px solid rgba(229, 231, 235, 0.95);
+  border-radius: 12px;
+  padding: 10px 8px;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #ffffff, rgba(246, 247, 251, 0.9));
+  color: var(--muted);
+}
+
+.miniPicker__monthOpt:hover {
+  border-color: rgba(109, 94, 252, 0.35);
+  color: #4b5563;
+}
+
+.miniPicker__monthOpt--active {
+  border-color: rgba(109, 94, 252, 0.55);
+  color: #3f3a9a;
+  background: rgba(109, 94, 252, 0.1);
+}
+
 .footer {
   padding: 18px;
   color: var(--muted);
@@ -467,7 +838,7 @@ body {
   }
 
   .dayBtn {
-    min-height: 52px;
+    min-height: calc(var(--day-cell-min-h) - 4px);
     padding: 10px 8px;
   }
 }

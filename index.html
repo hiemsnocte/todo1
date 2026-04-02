@@ -21,13 +21,30 @@
 
     <main class="container">
       <section class="stack">
-        <div class="card" aria-label="달력">
-          <div class="card__header">
-            <div>
-              <div class="card__title" id="monthLabel">이번 달</div>
-              <div class="card__hint" id="selectedLabel">날짜를 선택하세요</div>
+        <div class="card calendarCard" aria-label="달력">
+          <div class="card__header card__header--calendar">
+            <div class="calHeader">
+              <button type="button" class="calYear" id="yearLabel" title="연도 선택">2026년</button>
+              <div class="calHeaderCenter">
+                <button class="calNavBtn" id="prevMonthBtn" type="button" title="이전 달" aria-label="이전 달">
+                  &lt;
+                </button>
+                <button type="button" class="calNavBtn calMonthBtn" id="monthBtn" aria-live="polite">
+                  4월
+                </button>
+                <button class="calNavBtn" id="nextMonthBtn" type="button" title="다음 달" aria-label="다음 달">
+                  &gt;
+                </button>
+              </div>
+            <div class="pill todayPill" id="todayPill">
+              <span class="todayPill__weather" id="todayWeatherIcon" aria-hidden="true">☁️</span>
+              <span class="todayPill__temp" id="todayTempText">--°</span>
+              <span class="todayPill__sep" aria-hidden="true">·</span>
+              <span class="todayPill__label">오늘</span>
+              <span class="todayPill__md" id="todayMdText">4월 3일</span>
+              <span class="todayPill__time" id="todayTimeText">--:--</span>
             </div>
-            <div class="pill" id="todayPill" title="오늘"></div>
+            </div>
           </div>
 
           <div class="calendar" id="calendar" aria-label="이번 달 달력">
@@ -35,10 +52,10 @@
           </div>
         </div>
 
-        <div class="card" aria-label="할 일">
-          <div class="card__header">
-            <div>
-              <div class="card__title">할 일</div>
+        <div class="card todoCard" aria-label="할 일">
+          <div class="card__header todoPanel__head">
+            <div class="todoCard__titleBlock">
+              <div class="card__title">✔️ 할 일</div>
               <div class="card__hint" id="todoHint">날짜를 선택하면 할 일이 보여요</div>
             </div>
             <div class="filterBar" aria-label="필터">
@@ -51,7 +68,7 @@
 
           <form class="todoForm" id="todoForm" autocomplete="off">
             <label class="field">
-              <span class="field__label">새 할 일</span>
+              <span class="field__label">할일 추가</span>
               <input
                 class="field__input"
                 id="todoText"
@@ -80,6 +97,27 @@
         </div>
       </section>
     </main>
+
+    <div class="miniPicker" id="yearPicker" hidden role="dialog" aria-modal="true" aria-labelledby="yearPickerTitle">
+      <button type="button" class="miniPicker__backdrop" id="yearPickerBackdrop" aria-label="닫기"></button>
+      <div class="miniPicker__panel">
+        <div class="miniPicker__title" id="yearPickerTitle">연도 선택</div>
+        <div class="yearPickerRow">
+          <button type="button" class="calNavBtn calNavBtn--ghost" id="yearMinus" aria-label="1년 이전">−</button>
+          <input type="number" class="yearInput" id="yearInput" min="1900" max="2100" step="1" />
+          <button type="button" class="calNavBtn calNavBtn--ghost" id="yearPlus" aria-label="1년 다음">+</button>
+        </div>
+        <button type="button" class="btn btn--block" id="yearApplyBtn">확인</button>
+      </div>
+    </div>
+
+    <div class="miniPicker" id="monthPicker" hidden role="dialog" aria-modal="true" aria-labelledby="monthPickerTitle">
+      <button type="button" class="miniPicker__backdrop" id="monthPickerBackdrop" aria-label="닫기"></button>
+      <div class="miniPicker__panel">
+        <div class="miniPicker__title" id="monthPickerTitle">월 선택</div>
+        <div class="miniPicker__grid" id="monthPickerGrid"></div>
+      </div>
+    </div>
 
     <footer class="footer">
       <div class="footer__inner">
