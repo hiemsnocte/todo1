@@ -270,8 +270,10 @@ const app = {
   listYear: getSeoulDateTimeParts().year,
   todayISO: getTodayISOSeoul(),
   monthDate: new Date(),
-  /** 방금 추가한 할 일 — 달력 미리보기 NEW 표시용 `dateISO::todoId` */
+  /** 방금 추가한 할 일 — `storageDateISO::todoId` (반복은 날짜별 숨김은 newBadgeDismissed) */
   newTodoIds: new Set(),
+  /** NEW 끈 날짜(표시일) — `storageDateISO::todoId::displayDateISO` */
+  newBadgeDismissed: new Set(),
   /** 일반 삭제 확인 `{ storageDateISO, todoId }` */
   pendingDelete: null,
   /** 반복 할 일 삭제 확인 `{ storageDateISO, todoId, occurrenceDateISO }` */
@@ -320,17 +322,23 @@ function occurrenceYearMonth(t) {
   return typeof iso === "string" && iso.length >= 7 ? iso.slice(0, 7) : "";
 }
 
+function newBadgeDismissKey(t) {
+  const disp = t.displayDateISO || t.storageDateISO;
+  return `${t.storageDateISO}::${t.id}::${disp}`;
+}
+
 function shouldShowNewBadge(t) {
   if (!t.createdAt) return false;
   if (!app.newTodoIds.has(`${t.storageDateISO}::${t.id}`)) return false;
+  if (app.newBadgeDismissed.has(newBadgeDismissKey(t))) return false;
   return occurrenceYearMonth(t) === viewedYearMonth();
 }
 
+/** 해당 달력 날짜를 클릭했을 때, 그 날에 보이는 각 일정(반복 occurrence 포함)만 NEW 숨김 */
 function clearNewBadgesForDate(dateISO) {
   const onDay = getTodosForDate(dateISO);
-  const keysOnDay = new Set(onDay.map((x) => `${x.storageDateISO}::${x.id}`));
-  for (const key of [...app.newTodoIds]) {
-    if (keysOnDay.has(key)) app.newTodoIds.delete(key);
+  for (const t of onDay) {
+    app.newBadgeDismissed.add(newBadgeDismissKey(t));
   }
 }
 
