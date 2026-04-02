@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>달력 TODO</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <div class="brand">
+          <div class="brand__logo" aria-hidden="true">✓</div>
+          <div class="brand__text">
+            <div class="brand__title">달력 TODO</div>
+            <div class="brand__subtitle">날짜를 클릭해 할 일을 관리하고 태그로 필터링하세요</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="stack">
+        <div class="card" aria-label="달력">
+          <div class="card__header">
+            <div>
+              <div class="card__title" id="monthLabel">이번 달</div>
+              <div class="card__hint" id="selectedLabel">날짜를 선택하세요</div>
+            </div>
+            <div class="pill" id="todayPill" title="오늘"></div>
+          </div>
+
+          <div class="calendar" id="calendar" aria-label="이번 달 달력">
+            <!-- Filled by script.js -->
+          </div>
+        </div>
+
+        <div class="card" aria-label="할 일">
+          <div class="card__header">
+            <div>
+              <div class="card__title">할 일</div>
+              <div class="card__hint" id="todoHint">날짜를 선택하면 할 일이 보여요</div>
+            </div>
+            <div class="filterBar" aria-label="필터">
+              <button class="chip chip--active" id="filterAll" type="button">전체</button>
+              <button class="chip" id="filterAppt" type="button">약속</button>
+              <button class="chip" id="filterBday" type="button">생일</button>
+              <button class="chip" id="filterTodo" type="button">할일</button>
+            </div>
+          </div>
+
+          <form class="todoForm" id="todoForm" autocomplete="off">
+            <label class="field">
+              <span class="field__label">새 할 일</span>
+              <input
+                class="field__input"
+                id="todoText"
+                type="text"
+                placeholder="예: 장보기"
+                maxlength="120"
+                required
+              />
+            </label>
+
+            <label class="field">
+              <span class="field__label">종류</span>
+              <select class="field__input" id="todoCategory">
+                <option value="약속">약속</option>
+                <option value="생일">생일</option>
+                <option value="할일" selected>할일</option>
+              </select>
+            </label>
+
+            <button class="btn" type="submit" id="addBtn" disabled>추가</button>
+          </form>
+
+          <div class="todoList" id="todoList" aria-live="polite">
+            <!-- Filled by script.js -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <span>모든 내용은 localStorage에 자동 저장됩니다.</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

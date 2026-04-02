@@ -1,0 +1,474 @@
+/* Soft, modern, beginner-friendly styling */
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --primary: #6d5efc;
+  --primary-2: #8b7cff;
+  --good: #10b981;
+  --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(109, 94, 252, 0.18), transparent 45%),
+    radial-gradient(1200px 600px at 90% 0%, rgba(16, 185, 129, 0.12), transparent 45%), var(--bg);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  background: rgba(246, 247, 251, 0.72);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+}
+
+.topbar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 18px;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 10px 20px rgba(109, 94, 252, 0.25);
+}
+
+.brand__title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand__subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card__title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+}
+
+.card__hint {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.pill {
+  font-size: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: rgba(246, 247, 251, 0.9);
+  color: var(--muted);
+  user-select: none;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calHead {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.dow {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  padding: 6px 0;
+}
+
+.dow--weekend {
+  color: #ef4444;
+}
+
+.dayBtn {
+  appearance: none;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: rgba(246, 247, 251, 0.65);
+  border-radius: 14px;
+  padding: 10px 8px;
+  min-height: 56px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  position: relative;
+}
+
+.dayBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(109, 94, 252, 0.35);
+  background: rgba(109, 94, 252, 0.08);
+}
+
+.dayBtn[disabled] {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+.dayNum {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.dayNum--weekend {
+  color: #ef4444;
+}
+
+.previewList {
+  margin-top: 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.previewItem {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(107, 114, 128, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.previewItem__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  opacity: 0.95;
+}
+
+.previewItem__text {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.previewItem--done .previewItem__fill {
+  opacity: 0.35;
+}
+
+.previewMore {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.dayBtn--today {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.07);
+}
+
+.dayBtn--selected {
+  border-color: rgba(109, 94, 252, 0.6);
+  background: rgba(109, 94, 252, 0.12);
+}
+
+.todoForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin: 10px 0 14px;
+}
+
+.field__label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.field__input {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: rgba(246, 247, 251, 0.7);
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.field__input:focus {
+  border-color: rgba(109, 94, 252, 0.55);
+  box-shadow: 0 0 0 4px rgba(109, 94, 252, 0.12);
+  background: #fff;
+}
+
+.btn {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+  height: fit-content;
+  align-self: end;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+.btn:active {
+  transform: translateY(0px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--ghost {
+  background: rgba(246, 247, 251, 0.9);
+  color: var(--muted);
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  padding: 9px 10px;
+  font-weight: 800;
+}
+
+.btn--ghost:hover {
+  background: rgba(109, 94, 252, 0.08);
+  border-color: rgba(109, 94, 252, 0.25);
+}
+
+.todoList {
+  display: grid;
+  gap: 10px;
+}
+
+.todoItem {
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 16px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: start;
+  background: rgba(246, 247, 251, 0.55);
+}
+
+.todoMain {
+  min-width: 0;
+}
+
+.todoText {
+  font-weight: 800;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.todoText--done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chip {
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.chip:hover {
+  background: rgba(109, 94, 252, 0.08);
+  border-color: rgba(109, 94, 252, 0.25);
+  color: #4b5563;
+}
+
+.chip--active {
+  background: rgba(109, 94, 252, 0.12);
+  border-color: rgba(109, 94, 252, 0.35);
+  color: #3f3a9a;
+}
+
+.todoActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iconBtn {
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.iconBtn:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.18);
+  color: #b91c1c;
+}
+
+.check {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  accent-color: var(--good);
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: #fff;
+  color: var(--muted);
+}
+
+.badge--약속 {
+  background: rgba(109, 94, 252, 0.1);
+  border-color: rgba(109, 94, 252, 0.25);
+  color: #3f3a9a;
+}
+
+.badge--생일 {
+  background: rgba(236, 72, 153, 0.1);
+  border-color: rgba(236, 72, 153, 0.2);
+  color: #9d174d;
+}
+
+.badge--할일 {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #065f46;
+}
+
+.footer {
+  padding: 18px;
+  color: var(--muted);
+}
+
+.footer__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .stack {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .todoForm {
+    grid-template-columns: 1fr;
+  }
+
+  .dayBtn {
+    min-height: 52px;
+    padding: 10px 8px;
+  }
+}
+
